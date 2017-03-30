@@ -49,11 +49,11 @@ or in the "license" file accompanying this file. This file is distributed on an 
 
   /** controller of the app */
   function AppController(scope){
-    this.clientId = 'someClientId';
-    this.endpoint = null;
+    this.clientId = 'MQTT-UI';
+    this.endpoint = 'a2p50suclsf82w.iot.us-west-2.amazonaws.com';
     this.accessKey = null;
     this.secretKey = null;
-    this.regionName = 'us-east-1';
+    this.sessionToken = null;
     this.logs = new LogService();
     this.clients = new ClientControllerCache(scope, this.logs);
   }
@@ -66,13 +66,20 @@ or in the "license" file accompanying this file. This file is distributed on an 
       endpoint: this.endpoint.toLowerCase(),
       accessKey: this.accessKey,
       secretKey: this.secretKey,
-      regionName: this.regionName
+      sessionToken: this.sessionToken,
+      regionName: parseRegion(this.endpoint)
     };
     var client = this.clients.getClient(options);
     if (!client.connected) {
       client.connect(options);
     }
   };
+
+  function parseRegion(endpoint) {
+    var endpointPattern = new RegExp("iot\\.([\\w-]+)\\.amazonaws\\.com(\\:\\d+)?$");
+    var match = endpointPattern.exec(endpoint);
+    return match[1];
+  }
 
   AppController.prototype.removeClient = function(clientCtr) {
     this.clients.removeClient(clientCtr);
@@ -81,7 +88,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
   // would be better to use a seperate derective
   function ClientController(client, logs) {
     this.client = client;
-    this.topicName = 'seattle/traffic';
+    this.topicName = 'transfer/event/#';
     this.message = null;
     this.msgs = [];
     this.logs = logs;
@@ -226,6 +233,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
     var region = this.options.regionName;
     var secretKey = this.options.secretKey;
     var accessKey = this.options.accessKey;
+    var sessionToken = this.options.sessionToken;
     var algorithm = 'AWS4-HMAC-SHA256';
     var method = 'GET';
     var canonicalUri = '/mqtt';
@@ -253,6 +261,9 @@ or in the "license" file accompanying this file. This file is distributed on an 
 
     canonicalQuerystring += '&X-Amz-Signature=' + signature;
     var requestUrl = 'wss://' + host + canonicalUri + '?' + canonicalQuerystring;
+    if (sessionToken != null) {
+      requestUrl += "&X-Amz-Security-Token=" + encodeURIComponent(sessionToken);
+    }
     return requestUrl;
   };
 
