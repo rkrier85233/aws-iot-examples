@@ -14,8 +14,8 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <label for="endpoint">Endpoint: </label>
-          <input type="text" class="form-control" id="endpoint" placeholder="EndPoint" ng-model="vm.endpoint">
+          <label for="endpoint">IoT Endpoint: </label>
+          <input type="text" class="form-control" id="endpoint" placeholder="IoT endpoint" ng-model="vm.endpoint">
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
             <div class="form-inline">
               <div class="form-group">
                 <label for="topicInput">Topic: </label>
-                <input type="text" class="form-control" id="topicInput" placeholder="Topic" ng-model="clientCtr.topicName" />
+                <input type="text" size="40" class="form-control" id="topicInput" placeholder="Topic" ng-model="clientCtr.topicName" />
               </div>
               <button class="btn btn-primary" ng-click="clientCtr.subscribe()">Subscribe</button>
             </div>

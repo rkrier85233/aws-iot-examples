@@ -50,7 +50,8 @@ or in the "license" file accompanying this file. This file is distributed on an 
   /** controller of the app */
   function AppController(scope){
     this.clientId = 'MQTT-UI';
-    this.endpoint = 'a2p50suclsf82w.iot.us-west-2.amazonaws.com';
+    // this.endpoint = 'a2p50suclsf82w.iot.us-west-2.amazonaws.com';
+    this.endpoint = null;
     this.accessKey = null;
     this.secretKey = null;
     this.sessionToken = null;
@@ -88,7 +89,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
   // would be better to use a seperate derective
   function ClientController(client, logs) {
     this.client = client;
-    this.topicName = 'transfer/event/#';
+    this.topicName = '57u1WA97pnIZuu27bddLgA/jobstatus/#';
     this.message = null;
     this.msgs = [];
     this.logs = logs;
